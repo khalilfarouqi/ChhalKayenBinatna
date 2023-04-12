@@ -27,5 +27,5 @@ public class Participant {
     private String tel;
     private String email;
     @Enumerated(EnumType.STRING)
-    private Contry contry;
+    private Country country;
 }
