@@ -6,11 +6,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class WalletDto {
+public class WalletDto implements Serializable {
     private Long id;
     private Double total;
     private Currency currency;
