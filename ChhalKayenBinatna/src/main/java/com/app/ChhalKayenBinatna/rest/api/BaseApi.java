@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 
+@CrossOrigin(origins = "*")
 public interface BaseApi<E, D extends Serializable> {
     @Operation(
             summary = "Entity Get API",
