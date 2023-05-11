@@ -17,4 +17,6 @@ public class OperationDto implements Serializable {
     private String updateBy;
     private Date updateOn;
     private String name;
+    private GroupOperationDto groupOperationDto;
+    private ParticipantDto participantDto;
 }
