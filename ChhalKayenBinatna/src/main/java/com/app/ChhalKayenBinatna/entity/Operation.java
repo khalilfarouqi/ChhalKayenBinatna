@@ -21,4 +21,10 @@ public class Operation {
     private String updateBy;
     private Date updateOn;
     private String name;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "groupOperation_id")
+    private GroupOperation groupOperation;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "participant_id")
+    private Participant participant;
 }

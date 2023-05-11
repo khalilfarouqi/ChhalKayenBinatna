@@ -21,4 +21,8 @@ public class Wallet {
 
     @Enumerated(EnumType.STRING)
     private Currency currency;
+
+    @OneToOne
+    @JoinColumn(name = "participant_id")
+    private Participant participant;
 }
