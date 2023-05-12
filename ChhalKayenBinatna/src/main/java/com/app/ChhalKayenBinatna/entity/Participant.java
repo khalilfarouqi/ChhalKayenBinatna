@@ -4,6 +4,7 @@ import com.app.ChhalKayenBinatna.enums.*;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,6 +20,7 @@ public class Participant {
     private Long id;
     private String firstName;
     private String lastName;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date dateOfBirth;
     private String login;
     private String password;
