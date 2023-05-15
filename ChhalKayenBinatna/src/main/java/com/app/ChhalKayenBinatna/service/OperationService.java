@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,9 +50,9 @@ public class OperationService implements IBaseService<Operation, OperationDto> {
 
     @Override
     public OperationDto findById(Long id) {
-        OperationDto operationDto = modelMapper.map(operationRepository.findById(id).get(), OperationDto.class);
-        if (operationDto == null) throw new InvalidInputException("Operation not fond");
-        return operationDto;
+        Optional operation = operationRepository.findById(id);
+        if (operation.isPresent()) return modelMapper.map(operation.get(), OperationDto.class);
+        else throw new InvalidInputException("Operation not fond");
     }
 
     @Override
