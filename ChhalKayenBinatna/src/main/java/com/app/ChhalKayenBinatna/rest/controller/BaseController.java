@@ -1,6 +1,7 @@
 package com.app.ChhalKayenBinatna.rest.controller;
 
 import com.app.ChhalKayenBinatna.service.impl.IBaseService;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public abstract class BaseController<E, D extends Serializable> {
         return getService().save(dto);
     }
 
+    @SneakyThrows
     @PutMapping()
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public D update(@RequestBody D dto) {
