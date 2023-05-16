@@ -1,12 +1,15 @@
 package com.app.ChhalKayenBinatna.service;
 
 import com.app.ChhalKayenBinatna.dto.WalletDto;
+import com.app.ChhalKayenBinatna.entity.Participant;
 import com.app.ChhalKayenBinatna.entity.Wallet;
 import com.app.ChhalKayenBinatna.exception.InvalidInputException;
 import com.app.ChhalKayenBinatna.repository.WalletRepository;
 import com.app.ChhalKayenBinatna.service.impl.IBaseService;
 import io.github.perplexhub.rsql.RSQLJPASupport;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,10 +37,15 @@ public class WalletService implements IBaseService<Wallet, WalletDto> {
         return modelMapper.map(walletRepository.save(modelMapper.map(walletDto, Wallet.class)), WalletDto.class);
     }
 
+    @SneakyThrows
     @Override
     @Transactional
     public WalletDto update(WalletDto walletDto) {
-        return null;
+        Wallet wallet = walletRepository.findById(walletDto.getId()).orElseThrow(() -> new NotFoundException("Wallet not found"));
+        if (walletDto.getCurrency() == null) wallet.setCurrency(walletDto.getCurrency());
+        if (walletDto.getParticipantDto() == null) wallet.setParticipant(modelMapper.map(walletDto.getParticipantDto(), Participant.class));
+        if (walletDto.getTotal() == null) wallet.setTotal(walletDto.getTotal());
+        return modelMapper.map(walletRepository.save(wallet), WalletDto.class);
     }
 
     @Override
@@ -47,9 +56,9 @@ public class WalletService implements IBaseService<Wallet, WalletDto> {
 
     @Override
     public WalletDto findById(Long id) {
-        WalletDto walletDto = modelMapper.map(walletRepository.findById(id).get(), WalletDto.class);
-        if (walletDto == null) throw new InvalidInputException("wallet not fond");
-        return walletDto;
+        Optional<Wallet> wallet = walletRepository.findById(id);
+        if (!wallet.isPresent()) throw new InvalidInputException("wallet not fond");
+        return modelMapper.map(wallet.get(), WalletDto.class);
     }
 
     @Override

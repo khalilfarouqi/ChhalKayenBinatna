@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,8 +38,19 @@ public class ParticipantService implements IBaseService<Participant, Participant
 
     @Override
     @Transactional
-    public ParticipantDto update(ParticipantDto dto) {
-        return null;
+    public ParticipantDto update(ParticipantDto participantDto) {
+        ParticipantDto participantDto1 = modelMapper.map(participantRepository.findById(participantDto.getId()), ParticipantDto.class);
+        participantDto1.setCountry(participantDto.getCountry());
+        participantDto1.setEmail(participantDto.getEmail());
+        participantDto1.setLogin(participantDto.getLogin());
+        participantDto1.setPassword(participantDto.getPassword());
+        participantDto1.setRoles(participantDto.getRoles());
+        participantDto1.setLogin(participantDto.getLogin());
+        participantDto1.setDateOfBirth(participantDto.getDateOfBirth());
+        participantDto1.setFirstName(participantDto.getFirstName());
+        participantDto1.setLastName(participantDto.getLastName());
+        participantDto1.setTel(participantDto.getTel());
+        return modelMapper.map(participantRepository.save(modelMapper.map(participantDto1, Participant.class)), ParticipantDto.class);
     }
 
     @Override
@@ -49,9 +61,9 @@ public class ParticipantService implements IBaseService<Participant, Participant
 
     @Override
     public ParticipantDto findById(Long id) {
-        ParticipantDto participantDto = modelMapper.map(participantRepository.findById(id).get(), ParticipantDto.class);
-        if (participantDto == null) throw new InvalidInputException("Participant not fond");
-        return participantDto;
+        Optional<Participant> participant = participantRepository.findById(id);
+        if (participant.isPresent()) return modelMapper.map(participant.get(), ParticipantDto.class);
+        else throw new InvalidInputException("Participant not fond");
     }
 
     @Override
