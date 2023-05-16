@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.modelmapper.ModelMapper;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,7 +41,12 @@ public class GroupOperationService implements IBaseService<GroupOperation, Group
     @Override
     @Transactional
     public GroupOperationDto update(GroupOperationDto groupOperationDto) {
-        return null;
+        GroupOperationDto groupOperationDto1 = modelMapper.map(groupOperationRepository.findById(groupOperationDto.getId()), GroupOperationDto.class);
+        groupOperationDto1.setUpdateOn(new Date());
+        groupOperationDto1.setOperationType(groupOperationDto.getOperationType());
+        groupOperationDto1.setName(groupOperationDto.getName());
+        groupOperationDto1.setParticipantDto(groupOperationDto.getParticipantDto());
+        return modelMapper.map(groupOperationRepository.save(modelMapper.map(groupOperationDto1, GroupOperation.class)), GroupOperationDto.class);
     }
 
     @Override
@@ -50,9 +57,9 @@ public class GroupOperationService implements IBaseService<GroupOperation, Group
 
     @Override
     public GroupOperationDto findById(Long id) {
-        GroupOperationDto groupOperationDto = modelMapper.map(groupOperationRepository.findById(id).get(), GroupOperationDto.class);
-        if (groupOperationDto == null) throw new InvalidInputException("Group Operation not fond");
-        return groupOperationDto;
+        Optional<GroupOperation> groupOperation = groupOperationRepository.findById(id);
+        if (groupOperation.isPresent()) return modelMapper.map(groupOperation.get(), GroupOperationDto.class);
+        else throw new InvalidInputException("Group Operation not fond");
     }
 
     @Override

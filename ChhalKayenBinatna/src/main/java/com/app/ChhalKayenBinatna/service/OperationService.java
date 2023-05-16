@@ -17,8 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,7 +38,12 @@ public class OperationService implements IBaseService<Operation, OperationDto> {
     @Override
     @Transactional
     public OperationDto update(OperationDto operationDto) {
-        return null;
+        OperationDto operationDto1 = modelMapper.map(operationRepository.findById(operationDto.getId()), OperationDto.class);
+        operationDto1.setUpdateOn(new Date());
+        operationDto1.setGroupOperationDto(operationDto.getGroupOperationDto());
+        operationDto1.setName(operationDto.getName());
+        operationDto1.setParticipantDto(operationDto.getParticipantDto());
+        return modelMapper.map(operationRepository.save(modelMapper.map(operationDto1, Operation.class)), OperationDto.class);
     }
 
     @Override
@@ -50,7 +54,7 @@ public class OperationService implements IBaseService<Operation, OperationDto> {
 
     @Override
     public OperationDto findById(Long id) {
-        Optional operation = operationRepository.findById(id);
+        Optional<Operation> operation = operationRepository.findById(id);
         if (operation.isPresent()) return modelMapper.map(operation.get(), OperationDto.class);
         else throw new InvalidInputException("Operation not fond");
     }
