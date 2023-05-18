@@ -42,9 +42,9 @@ public class WalletService implements IBaseService<Wallet, WalletDto> {
     @Transactional
     public WalletDto update(WalletDto walletDto) {
         Wallet wallet = walletRepository.findById(walletDto.getId()).orElseThrow(() -> new NotFoundException("Wallet not found"));
-        if (walletDto.getCurrency() == null) wallet.setCurrency(walletDto.getCurrency());
-        if (walletDto.getParticipantDto() == null) wallet.setParticipant(modelMapper.map(walletDto.getParticipantDto(), Participant.class));
-        if (walletDto.getTotal() == null) wallet.setTotal(walletDto.getTotal());
+        if (walletDto.getCurrency() != null) wallet.setCurrency(walletDto.getCurrency());
+        if (walletDto.getParticipantDto() != null) wallet.setParticipant(modelMapper.map(walletDto.getParticipantDto(), Participant.class));
+        if (walletDto.getTotal() != null) wallet.setTotal(walletDto.getTotal());
         return modelMapper.map(walletRepository.save(wallet), WalletDto.class);
     }
 
